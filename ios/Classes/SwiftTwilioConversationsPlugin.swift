@@ -36,7 +36,7 @@ public class SwiftTwilioConversationsPlugin: NSObject, FlutterPlugin {
             guard let loggingApi = SwiftTwilioConversationsPlugin.flutterLoggingApi else {
                 return
             }
-            loggingApi.log(fromHostMsg: msg) { (error: Error?) in
+            loggingApi.log(fromHostMsg: msg) { error in
                 if let error = error {
                     NSLog("Exception when using FlutterLoggingApi: \(String(describing: error))")
                 }
@@ -74,12 +74,12 @@ public class SwiftTwilioConversationsPlugin: NSObject, FlutterPlugin {
         debug("didRegisterForRemoteNotificationsWithDeviceToken => onSuccess: \((deviceToken as NSData).description)")
         if let reason = SwiftTwilioConversationsPlugin.reasonForTokenRetrieval {
             if reason == "register" {
-                client?.register(withNotificationToken: deviceToken, completion: { (result: TCHResult) in
+                client?.register(withNotificationToken: deviceToken, completion: { result in
                     self.debug("didRegisterForRemoteNotificationsWithDeviceToken => "
                                + "registered for notifications: \(result.isSuccessful)")
                     if result.isSuccessful {
                         SwiftTwilioConversationsPlugin.flutterClientApi?.registered(
-                            completion: { (error: Error?) in
+                            completion: { error in
                                 if let errorMessage = error {
                                     self.debug("didRegisterForRemoteNotificationsWithDeviceToken => "
                                             + "Error calling FlutterClientApi: \(errorMessage)")
@@ -87,7 +87,7 @@ public class SwiftTwilioConversationsPlugin: NSObject, FlutterPlugin {
                         })
                     } else if let error = result.error {
                         SwiftTwilioConversationsPlugin.flutterClientApi?.registrationFailedErrorInfoData(
-                            Mapper.errorToPigeon(error), completion: { (error: Error?) in
+                            Mapper.errorToPigeon(error), completion: { error in
                                 if let errorMessage = error {
                                     self.debug("didRegisterForRemoteNotificationsWithDeviceToken => "
                                             + "Error calling FlutterClientApi: \(errorMessage)")
@@ -98,7 +98,7 @@ public class SwiftTwilioConversationsPlugin: NSObject, FlutterPlugin {
                         error.code = 0
                         error.message = "Unknown error during registration."
                         SwiftTwilioConversationsPlugin.flutterClientApi?.registrationFailedErrorInfoData(
-                            error, completion: { (error: Error?) in
+                            error, completion: { error in
                                 if let errorMessage = error {
                                     self.debug("didRegisterForRemoteNotificationsWithDeviceToken => "
                                             + "Error calling FlutterClientApi: \(errorMessage)")
@@ -107,11 +107,11 @@ public class SwiftTwilioConversationsPlugin: NSObject, FlutterPlugin {
                     }
                 })
             } else {
-                client?.deregister(withNotificationToken: deviceToken, completion: { (result: TCHResult) in
+                client?.deregister(withNotificationToken: deviceToken, completion: { result in
                     self.debug("didRegisterForRemoteNotificationsWithDeviceToken => "
                           + "deregistered for notifications: \(result.isSuccessful)")
                     if result.isSuccessful {
-                        SwiftTwilioConversationsPlugin.flutterClientApi?.deregistered(completion: { (error: Error?) in
+                        SwiftTwilioConversationsPlugin.flutterClientApi?.deregistered(completion: { error in
                             if let errorMessage = error {
                                 self.debug("didRegisterForRemoteNotificationsWithDeviceToken => "
                                         + "Error calling FlutterClientApi: \(errorMessage)")
@@ -119,7 +119,7 @@ public class SwiftTwilioConversationsPlugin: NSObject, FlutterPlugin {
                         })
                     } else if let error = result.error {
                         SwiftTwilioConversationsPlugin.flutterClientApi?.deregistrationFailedErrorInfoData(
-                            Mapper.errorToPigeon(error), completion: { (error: Error?) in
+                            Mapper.errorToPigeon(error), completion: { error in
                                 if let errorMessage = error {
                                     self.debug("didRegisterForRemoteNotificationsWithDeviceToken => "
                                             + "Error calling FlutterClientApi: \(errorMessage)")
@@ -130,7 +130,7 @@ public class SwiftTwilioConversationsPlugin: NSObject, FlutterPlugin {
                         error.code = 0
                         error.message = "Unknown error during deregistration."
                         SwiftTwilioConversationsPlugin.flutterClientApi?.deregistrationFailedErrorInfoData(
-                            error, completion: { (error: Error?) in
+                            error, completion: { error in
                                 if let errorMessage = error {
                                     self.debug("didRegisterForRemoteNotificationsWithDeviceToken => "
                                             + "Error calling FlutterClientApi: \(errorMessage)")
@@ -151,7 +151,7 @@ public class SwiftTwilioConversationsPlugin: NSObject, FlutterPlugin {
         exception.code = NSNumber(value: error.code)
         exception.message = error.localizedDescription
         SwiftTwilioConversationsPlugin.flutterClientApi?.registrationFailedErrorInfoData(
-            exception, completion: { (error: Error?) in
+            exception, completion: { error in
                 if let errorMessage = error {
                     self.debug("didFailToRegisterForRemoteNotificationsWithError => "
                         + "Error calling FlutterClientApi: \(errorMessage)")

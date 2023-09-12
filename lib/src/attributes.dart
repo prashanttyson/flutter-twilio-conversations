@@ -43,7 +43,7 @@ class Attributes {
     final type = EnumToString.fromString(
             AttributesType.values, attributes[0] as String) ??
         AttributesType.NULL;
-    final json = attributes[1] as String;
+    final json = attributes[1] as String?;
     return Attributes(type, json);
   }
 

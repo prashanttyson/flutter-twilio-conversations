@@ -3,6 +3,18 @@ import TwilioConversationsClient
 
 // swiftlint:disable type_body_length
 class MessageMethods: NSObject, TWCONMessageApi {
+    func getAggregatedDeliveryReceiptConversationSid(_ conversationSid: String, messageIndex: NSNumber, completion: @escaping (TWCONDeliveryReceiptData?, FlutterError?) -> Void) {}
+    
+    func aggregatedDeliveryReceiptConversationSid(_ conversationSid: String, messageIndex: NSNumber) -> (TWCONDeliveryReceiptData?, FlutterError?) {
+        return (nil, nil)
+    }
+    
+    func getDetailedDeliveryReceiptListConversationSid(_ conversationSid: String, messageIndex: NSNumber, completion: @escaping ([TWCONDetailedDeliveryReceiptData]?, FlutterError?) -> Void) {}
+    
+    func detailedDeliveryReceiptListConversationSid(_ conversationSid: String, messageIndex: NSNumber) -> ([TWCONDetailedDeliveryReceiptData]?, FlutterError?) {
+        return (nil, nil)
+    }
+    
     let TAG = "MessageMethods"
 
     // swiftlint:disable function_body_length
@@ -345,6 +357,7 @@ class MessageMethods: NSObject, TWCONMessageApi {
                 }
         })
     }
+    
 
     private func debug(_ msg: String) {
         SwiftTwilioConversationsPlugin.debug("\(TAG)::\(msg)")

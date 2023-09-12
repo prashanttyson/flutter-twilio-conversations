@@ -18,7 +18,7 @@ public class ConversationListener: NSObject, TCHConversationDelegate {
         SwiftTwilioConversationsPlugin.flutterClientApi?.messageAddedConversationSid(
             conversationSid,
             messageData: Mapper.messageToPigeon(message, conversationSid: conversationSid),
-            completion: { (error: Error?) in
+            completion: { error in
                 if let errorMessage = error {
                     self.debug("onMessageAdded => "
                         + "Error calling FlutterClientApi: \(errorMessage)")
@@ -38,7 +38,7 @@ public class ConversationListener: NSObject, TCHConversationDelegate {
             conversationSid,
             messageData: Mapper.messageToPigeon(message, conversationSid: conversationSid),
             reason: Mapper.messageUpdateToString(updated),
-            completion: { (error: Error?) in
+            completion: { error in
                 if let errorMessage = error {
                     self.debug("onMessageUpdated => "
                         + "Error calling FlutterClientApi: \(errorMessage)")
@@ -55,7 +55,7 @@ public class ConversationListener: NSObject, TCHConversationDelegate {
         SwiftTwilioConversationsPlugin.flutterClientApi?.messageDeletedConversationSid(
             conversationSid,
             messageData: Mapper.messageToPigeon(message, conversationSid: conversationSid),
-            completion: { (error: Error?) in
+            completion: { error in
                 if let errorMessage = error {
                     self.debug("onMessageDeleted => "
                         + "Error calling FlutterClientApi: \(errorMessage)")
@@ -72,7 +72,7 @@ public class ConversationListener: NSObject, TCHConversationDelegate {
         SwiftTwilioConversationsPlugin.flutterClientApi?.participantAddedConversationSid(
             conversationSid,
             participantData: Mapper.participantToPigeon(participant, conversationSid: conversationSid)!,
-            completion: { (error: Error?) in
+            completion: { error in
                 if let errorMessage = error {
                     self.debug("onParticipantAdded => "
                         + "Error calling FlutterClientApi: \(errorMessage)")
@@ -92,7 +92,7 @@ public class ConversationListener: NSObject, TCHConversationDelegate {
             conversationSid,
             participantData: Mapper.participantToPigeon(participant, conversationSid: conversationSid)!,
             reason: Mapper.participantUpdateToString(updated),
-            completion: { (error: Error?) in
+            completion: { error in
                 if let errorMessage = error {
                     self.debug("onParticipantUpdated => "
                         + "Error calling FlutterClientApi: \(errorMessage)")
@@ -109,7 +109,7 @@ public class ConversationListener: NSObject, TCHConversationDelegate {
         SwiftTwilioConversationsPlugin.flutterClientApi?.participantDeletedConversationSid(
             conversationSid,
             participantData: Mapper.participantToPigeon(participant, conversationSid: conversationSid)!,
-            completion: { (error: Error?) in
+            completion: { error in
                 if let errorMessage = error {
                     self.debug("onParticipantDeleted => "
                         + "Error calling FlutterClientApi: \(errorMessage)")
@@ -128,7 +128,7 @@ public class ConversationListener: NSObject, TCHConversationDelegate {
             conversationSid,
             conversationData: Mapper.conversationToPigeon(conversation)!,
             participantData: Mapper.participantToPigeon(participant, conversationSid: conversationSid)!,
-            completion: { (error: Error?) in
+            completion: { error in
                 if let errorMessage = error {
                     self.debug("onTypingStarted => "
                         + "Error calling FlutterClientApi: \(errorMessage)")
@@ -147,7 +147,7 @@ public class ConversationListener: NSObject, TCHConversationDelegate {
             conversationSid,
             conversationData: Mapper.conversationToPigeon(conversation)!,
             participantData: Mapper.participantToPigeon(participant, conversationSid: conversationSid)!,
-            completion: { (error: Error?) in
+            completion: { error in
                 if let errorMessage = error {
                     self.debug("onTypingEnded => "
                         + "Error calling FlutterClientApi: \(errorMessage)")
@@ -166,7 +166,7 @@ public class ConversationListener: NSObject, TCHConversationDelegate {
         SwiftTwilioConversationsPlugin.flutterClientApi?.synchronizationChangedConversationSid(
             conversationSid,
             conversationData: Mapper.conversationToPigeon(conversation)!,
-            completion: { (error: Error?) in
+            completion: { error in
                 if let errorMessage = error {
                     self.debug("onSynchronizationChanged => "
                         + "Error calling FlutterClientApi: \(errorMessage)")
