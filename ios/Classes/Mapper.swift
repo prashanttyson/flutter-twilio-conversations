@@ -51,6 +51,10 @@ public class Mapper {
     }
 
     public static func messageToPigeon(_ message: TCHMessage, conversationSid: String?) -> TWCONMessageData {
+
+        let attachedMedia = message.attachedMedia.first
+        let pigeonMedia = attachedMedia != nil ? mediaToPigeon(message, conversationSid) : nil
+        
         let result = TWCONMessageData()
         result.sid = message.sid
         result.author = message.author
@@ -62,9 +66,9 @@ public class Mapper {
         result.participantSid = message.participantSid
 //        result.participant = participantToDict(message.participant, conversationSid: conversationSid)
         result.messageIndex = message.index
-        result.type = messageTypeToString(message.messageType)
-        result.hasMedia = NSNumber(value: message.hasMedia())
-        result.media = mediaToPigeon(message, conversationSid)
+        result.type = pigeonMedia != nil ? "MEDIA" : "TEXT"
+        result.hasMedia = NSNumber(value: pigeonMedia != nil)
+        result.media = pigeonMedia
         result.attributes = attributesToPigeon(message.attributes())
         return result
     }
@@ -84,8 +88,9 @@ public class Mapper {
         result.dateCreated = participant.dateCreated
         result.dateUpdated = participant.dateUpdated
         result.identity = participant.identity
-        result.type = participantTypeToString(participant.type)
+            result.type = participantTypeToString(participant.channelType ?? TCHParticipant.ParticipantChannelType.chat)
         result.attributes = attributesToPigeon(participant.attributes())
+        
         return result
     }
 
@@ -104,18 +109,21 @@ public class Mapper {
     }
 
     public static func mediaToPigeon(_ message: TCHMessage, _ conversationSid: String?) -> TWCONMessageMediaData? {
-        if !message.hasMedia() {
+        if message.attachedMedia.isEmpty {
             return nil
         }
 
         let result = TWCONMessageMediaData()
-        result.sid = message.mediaSid
-        result.fileName = message.mediaFilename
-        result.type = message.mediaType
-        result.size = NSNumber(value: message.mediaSize)
+        
+        let media = message.attachedMedia.first
+        result.sid = media?.sid
+        result.fileName = media?.filename
+        result.type = media?.contentType
+        result.size = NSNumber(value: media?.size ?? 0)
         result.conversationSid = conversationSid
         result.messageIndex = message.index
         result.messageSid = message.sid
+        
         return result
     }
 
@@ -315,7 +323,7 @@ public class Mapper {
         }
     }
 
-    public static func participantTypeToString(_ participantType: TCHParticipantType) -> String {
+    public static func participantTypeToString(_ participantType: TCHParticipant.ParticipantChannelType) -> String {
         let participantTypeString: String
 
         switch participantType {
@@ -325,30 +333,11 @@ public class Mapper {
             participantTypeString = "OTHER"
         case .sms:
             participantTypeString = "SMS"
-        case .unset:
-            participantTypeString = "UNSET"
         case .whatsapp:
             participantTypeString = "WHATSAPP"
-        @unknown default:
-            participantTypeString = "UNKNOWN"
         }
 
         return participantTypeString
-    }
-
-    public static func messageTypeToString(_ messageType: TCHMessageType) -> String {
-        let messageTypeString: String
-
-        switch messageType {
-        case .media:
-            messageTypeString = "MEDIA"
-        case .text:
-            messageTypeString = "TEXT"
-        @unknown default:
-            messageTypeString = "UNKNOWN"
-        }
-
-        return messageTypeString
     }
 
     public static func messageUpdateToString(_ update: TCHMessageUpdate) -> String {

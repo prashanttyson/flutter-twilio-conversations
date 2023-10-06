@@ -57,23 +57,27 @@ class MessageMethods: NSObject, TWCONMessageApi {
                     conversation.message(
                         withIndex: messageIndex,
                         completion: { (result: TCHResult, message: TCHMessage?) in
-                        if result.isSuccessful, let message = message {
-                            message.getMediaContentTemporaryUrl(completion: { (result: TCHResult, url: String?) in
-                                if result.isSuccessful, let url = url {
-                                    self.debug("getMediaContentTemporaryUrl => onSuccess: \(url)")
-                                    completion(url, nil)
-                                } else {
-                                    let errorMessage = String(describing: result.error)
-                                    self.debug("getMediaContentTemporaryUrl => onError: \(errorMessage)")
-                                    completion(
-                                        nil,
-                                        FlutterError(
-                                            code: "TwilioException",
-                                            message: "\(result.error?.code)|Error getting mediaContentTemporaryUrl: "
-                                            + "\(errorMessage)",
-                                            details: nil))
+                            if 
+                                result.isSuccessful,
+                                let message = message,
+                                let media = message.attachedMedia.first
+                            {
+                                media.getTemporaryContentUrl { (result, url) in
+                                    if result.isSuccessful, let url = url {
+                                        self.debug("getMediaContentTemporaryUrl => onSuccess: \(url)")
+                                        completion(url.absoluteString, nil)
+                                    } else {
+                                        let errorMessage = String(describing: result.error)
+                                        self.debug("getMediaContentTemporaryUrl => onError: \(errorMessage)")
+                                        completion(
+                                            nil,
+                                            FlutterError(
+                                                code: "TwilioException",
+                                                message: "\(result.error?.code)|Error getting mediaContentTemporaryUrl: "
+                                                + "\(errorMessage)",
+                                                details: nil))
                                 }
-                            })
+                            }
                         } else {
                             self.debug("getMediaContentTemporaryUrl => onError: \(String(describing: result.error))")
                             completion(

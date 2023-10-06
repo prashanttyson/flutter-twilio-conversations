@@ -200,86 +200,81 @@ class ConversationMethods: NSObject, TWCONConversationApi {
         _ conversationSid: String?,
         options: TWCONMessageOptionsData?,
         completion: @escaping (TWCONMessageData?, FlutterError?) -> Void) {
-        debug("sendMessage => conversationSid: \(String(describing: conversationSid))")
-        guard let client = SwiftTwilioConversationsPlugin.instance?.client else {
-            return completion(
-                nil,
-                FlutterError(
-                    code: "ClientNotInitializedException",
-                    message: "Client has not been initialized.",
-                    details: nil))
-        }
-
-        guard let conversationSid = conversationSid else {
-            return completion(
-                nil,
-                FlutterError(
-                    code: "MissingParameterException",
-                    message: "Missing 'conversationSid' parameter",
-                    details: nil))
-        }
-
-        guard let options = options else {
-            return completion(
-                nil,
-                FlutterError(
-                    code: "MissingParameterException",
-                    message: "Missing 'options' parameter",
-                    details: nil))
-        }
-
-        let messageOptions = TCHMessageOptions()
-
-        if let messageBody = options.body {
-            messageOptions.withBody(messageBody)
-        }
-        if let input = options.inputPath {
-            guard let mimeType = options.mimeType else {
+            debug("sendMessage => conversationSid: \(String(describing: conversationSid))")
+            guard let client = SwiftTwilioConversationsPlugin.instance?.client else {
+                return completion(
+                    nil,
+                    FlutterError(
+                        code: "ClientNotInitializedException",
+                        message: "Client has not been initialized.",
+                        details: nil))
+            }
+            
+            guard let conversationSid = conversationSid else {
                 return completion(
                     nil,
                     FlutterError(
                         code: "MissingParameterException",
-                        message: "Missing 'mimeType' in MessageOptions",
+                        message: "Missing 'conversationSid' parameter",
                         details: nil))
             }
-
-            if let inputStream = InputStream(fileAtPath: input) {
-                messageOptions.withMediaStream(inputStream, contentType: mimeType, defaultFilename: options.filename,
-                                               onStarted: nil,
-                                               onProgress: nil,
-                                               onCompleted: nil)
-//                                               ,
-//                                               onStarted: {
-//                    // implement media stream progress listener
-//
-//                },
-//                                               onProgress: { (bytes: UInt) in
-//                    // implement media stream progress listener
-//
-//                },
-//                                               onCompleted: { (mediaSid: String) in
-//                    // implement media stream progress listener
-//
-//                }
-//                )
-            } else {
+            
+            guard let options = options else {
                 return completion(
                     nil,
                     FlutterError(
-                        code: "NotFoundException",
-                        message: "Error locating file for upload from `\(input)`",
+                        code: "MissingParameterException",
+                        message: "Missing 'options' parameter",
                         details: nil))
             }
-        }
+            
+            func messageBuilder(_ conversation: TCHConversation,
+                withOptions options: TWCONMessageOptionsData,
+                completion: @escaping (TWCONMessageData?, FlutterError?) -> Void
+            ) -> MessageBuilder? {
+                
+                let messageBuilder = conversation.prepareMessage()
+                if let messageBody = options.body {
+                    messageBuilder.setBody(messageBody)
+                }
+                
+                if let input = options.inputPath {
+                    guard let mimeType = options.mimeType else {
+                        completion(
+                            nil,
+                            FlutterError(
+                                code: "MissingParameterException",
+                                message: "Missing 'mimeType' in MessageOptions",
+                                details: nil))
+                        return nil
+                    }
+                    
+                    if let inputStream = InputStream(fileAtPath: input) {
+                        messageBuilder.addMedia(inputStream: inputStream, contentType: mimeType, filename: options.filename)
+                    } else {
+                        completion(
+                            nil,
+                            FlutterError(
+                                code: "NotFoundException",
+                                message: "Error locating file for upload from `\(input)`",
+                                details: nil))
+                        return nil
+                    }
+                }
+                
+                return messageBuilder
+            }
 
         client.conversation(
             withSidOrUniqueName: conversationSid,
             completion: { (result: TCHResult, conversation: TCHConversation?) in
             if result.isSuccessful,
                let conversation = conversation {
-                conversation.sendMessage(
-                    with: messageOptions,
-                    completion: { (result: TCHResult, message: TCHMessage?) in
+                let messageBuilder = messageBuilder(conversation,
+                                                    withOptions: options,
+                                                        completion: completion)
+                
+                messageBuilder?.buildAndSend(completion: { result, message in
                     if result.isSuccessful,
                        let message = message {
                         self.debug("sendMessage => onSuccess")
