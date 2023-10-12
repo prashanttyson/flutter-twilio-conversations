@@ -78,12 +78,12 @@ class TwilioConversationsPlugin : FlutterPlugin {
     }
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        if (initialized) {
-            Log.d(LOG_TAG, "TwilioConversationsPlugin.onAttachedToEngine: already initialized")
-            return
-        } else {
-            Log.d(LOG_TAG, "TwilioConversationsPlugin.onAttachedToEngine")
-        }
+//        if (initialized) {
+//            Log.d(LOG_TAG, "TwilioConversationsPlugin.onAttachedToEngine: already initialized")
+//            return
+//        } else {
+//            Log.d(LOG_TAG, "TwilioConversationsPlugin.onAttachedToEngine")
+//        }
 
         initialized = true
         instance = this
