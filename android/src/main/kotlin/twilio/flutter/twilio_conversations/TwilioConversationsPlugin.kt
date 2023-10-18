@@ -71,7 +71,11 @@ class TwilioConversationsPlugin : FlutterPlugin {
             if (nativeDebug) {
                 Log.d(LOG_TAG, msg)
                 handler.post {
-                    flutterLoggingApi.logFromHost(msg) { }
+                    flutterLoggingApi.logFromHost(msg, object :Api.Result<Void> {
+                        override fun success(result: Void?) {}
+
+                        override fun error(error: Throwable?) {}
+                    })
                 }
             }
         }
@@ -84,18 +88,17 @@ class TwilioConversationsPlugin : FlutterPlugin {
 //        } else {
 //            Log.d(LOG_TAG, "TwilioConversationsPlugin.onAttachedToEngine")
 //        }
-
         initialized = true
         instance = this
         messenger = flutterPluginBinding.binaryMessenger
         applicationContext = flutterPluginBinding.applicationContext
 
-        Api.PluginApi.setup(flutterPluginBinding.binaryMessenger, pluginApi)
-        Api.ConversationClientApi.setup(flutterPluginBinding.binaryMessenger, conversationClientApi)
-        Api.ConversationApi.setup(flutterPluginBinding.binaryMessenger, conversationApi)
-        Api.ParticipantApi.setup(flutterPluginBinding.binaryMessenger, participantApi)
-        Api.MessageApi.setup(flutterPluginBinding.binaryMessenger, messageApi)
-        Api.UserApi.setup(flutterPluginBinding.binaryMessenger, userApi)
+        Api.PluginApi.setUp(flutterPluginBinding.binaryMessenger, pluginApi)
+        Api.ConversationClientApi.setUp(flutterPluginBinding.binaryMessenger, conversationClientApi)
+        Api.ConversationApi.setUp(flutterPluginBinding.binaryMessenger, conversationApi)
+        Api.ParticipantApi.setUp(flutterPluginBinding.binaryMessenger, participantApi)
+        Api.MessageApi.setUp(flutterPluginBinding.binaryMessenger, messageApi)
+        Api.UserApi.setUp(flutterPluginBinding.binaryMessenger, userApi)
 
         flutterClientApi = Api.FlutterConversationClientApi(flutterPluginBinding.binaryMessenger)
         flutterLoggingApi = Api.FlutterLoggingApi(flutterPluginBinding.binaryMessenger)
@@ -109,12 +112,12 @@ class TwilioConversationsPlugin : FlutterPlugin {
         messenger = flutterPluginBinding.binaryMessenger
         applicationContext = flutterPluginBinding.applicationContext
 
-        Api.PluginApi.setup(flutterPluginBinding.binaryMessenger, null)
-        Api.ConversationClientApi.setup(flutterPluginBinding.binaryMessenger, null)
-        Api.ConversationApi.setup(flutterPluginBinding.binaryMessenger, null)
-        Api.ParticipantApi.setup(flutterPluginBinding.binaryMessenger, null)
-        Api.MessageApi.setup(flutterPluginBinding.binaryMessenger, null)
-        Api.UserApi.setup(flutterPluginBinding.binaryMessenger, null)
+        Api.PluginApi.setUp(flutterPluginBinding.binaryMessenger, null)
+        Api.ConversationClientApi.setUp(flutterPluginBinding.binaryMessenger, null)
+        Api.ConversationApi.setUp(flutterPluginBinding.binaryMessenger, null)
+        Api.ParticipantApi.setUp(flutterPluginBinding.binaryMessenger, null)
+        Api.MessageApi.setUp(flutterPluginBinding.binaryMessenger, null)
+        Api.UserApi.setUp(flutterPluginBinding.binaryMessenger, null)
 
         flutterClientApi = Api.FlutterConversationClientApi(flutterPluginBinding.binaryMessenger)
         flutterLoggingApi = Api.FlutterLoggingApi(flutterPluginBinding.binaryMessenger)

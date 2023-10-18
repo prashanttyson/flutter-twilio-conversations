@@ -20,6 +20,13 @@ import twilio.flutter.twilio_conversations.listeners.SafeStatusListener
 class ConversationClientMethods : Api.ConversationClientApi {
     private val TAG = "ConversationClientMethods"
 
+    private val resultListener: Api.Result<Void>
+        get() = object : Api.Result<Void> {
+            override fun success(result: Void?) {}
+
+            override fun error(error: Throwable?) {}
+        }
+
     override fun updateToken(token: String, result: Api.Result<Void>) {
         debug("updateToken")
 
@@ -168,12 +175,14 @@ class ConversationClientMethods : Api.ConversationClientApi {
         val client = TwilioConversationsPlugin.client
             ?: return result.error(ClientNotInitializedException("Client is not initialized"))
 
+
+
         try {
             client.registerFCMToken(
                 ConversationsClient.FCMToken(token),
                 object : SafeStatusListener {
                     override fun onSafeSuccess() {
-                        TwilioConversationsPlugin.flutterClientApi.registered { }
+                        TwilioConversationsPlugin.flutterClientApi.registered(resultListener)
                         result.success(null)
                     }
 
@@ -182,8 +191,9 @@ class ConversationClientMethods : Api.ConversationClientApi {
                         TwilioConversationsPlugin.flutterClientApi.registrationFailed(
                             Mapper.errorInfoToPigeon(
                                 errorInfo
-                            )
-                        ) { }
+                            ),
+                            resultListener
+                        )
                         result.error(
                             TwilioException(
                                 errorInfo.code,
@@ -210,7 +220,7 @@ class ConversationClientMethods : Api.ConversationClientApi {
                 ConversationsClient.FCMToken(token),
                 object : SafeStatusListener {
                     override fun onSafeSuccess() {
-                        TwilioConversationsPlugin.flutterClientApi.deregistered { }
+                        TwilioConversationsPlugin.flutterClientApi.deregistered(resultListener)
                         result.success(null)
                     }
 
@@ -219,8 +229,9 @@ class ConversationClientMethods : Api.ConversationClientApi {
                         TwilioConversationsPlugin.flutterClientApi.deregistrationFailed(
                             Mapper.errorInfoToPigeon(
                                 errorInfo
-                            )
-                        ) { }
+                            ),
+                            resultListener
+                        )
                         result.error(
                             TwilioException(
                                 errorInfo.code,
