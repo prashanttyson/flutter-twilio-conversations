@@ -57,12 +57,12 @@ public class SwiftTwilioConversationsPlugin: NSObject, FlutterPlugin {
         SwiftTwilioConversationsPlugin.flutterLoggingApi =
             TWCONFlutterLoggingApi(binaryMessenger: registrar.messenger())
 
-        TWCONPluginApiSetup(registrar.messenger(), SwiftTwilioConversationsPlugin.pluginApi)
-        TWCONConversationClientApiSetup(registrar.messenger(), SwiftTwilioConversationsPlugin.conversationClientApi)
-        TWCONConversationApiSetup(registrar.messenger(), SwiftTwilioConversationsPlugin.conversationApi)
-        TWCONParticipantApiSetup(registrar.messenger(), SwiftTwilioConversationsPlugin.participantApi)
-        TWCONMessageApiSetup(registrar.messenger(), SwiftTwilioConversationsPlugin.messageApi)
-        TWCONUserApiSetup(registrar.messenger(), SwiftTwilioConversationsPlugin.userApi)
+        SetUpTWCONPluginApi(registrar.messenger(), SwiftTwilioConversationsPlugin.pluginApi)
+        SetUpTWCONConversationClientApi(registrar.messenger(), SwiftTwilioConversationsPlugin.conversationClientApi)
+        SetUpTWCONConversationApi(registrar.messenger(), SwiftTwilioConversationsPlugin.conversationApi)
+        SetUpTWCONParticipantApi(registrar.messenger(), SwiftTwilioConversationsPlugin.participantApi)
+        SetUpTWCONMessageApi(registrar.messenger(), SwiftTwilioConversationsPlugin.messageApi)
+        SetUpTWCONUserApi(registrar.messenger(), SwiftTwilioConversationsPlugin.userApi)
 
         registrar.addApplicationDelegate(self)
     }
