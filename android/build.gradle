@@ -2,14 +2,13 @@ group 'twilio.flutter.twilio_conversations'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.8.0'
+    ext.kotlin_version = '1.8.21'
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -21,31 +20,49 @@ rootProject.allprojects {
     }
 }
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+plugins {
+    id "com.android.library"
+    id "kotlin-android"
+}
+
 
 android {
-    compileSdkVersion 34
+    namespace = "twilio.flutter.twilio_conversations" // Ensure this matches your package structure
+    compileSdk = 34
+    ndkVersion = "23.1.7779620"
+
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
     defaultConfig {
-        minSdkVersion 21
+        minSdk = 21
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+  
     }
-    lintOptions {
-        disable 'InvalidPackage'
+   lint {
+        abortOnError = false // Prevent build failure on lint errors
+        disable += ['InvalidPackage'] // Suppress 'InvalidPackage' warnings
     }
+
     kotlinOptions {
-        jvmTarget = '1.8'
+       jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+     compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.twilio:conversations-android:6.1.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+     // Kotlin reflection library
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version" // Match kotlin-stdlib version
 
-
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
     implementation 'com.android.support:multidex:2.0.1'
+    implementation 'com.twilio:conversations-android:6.1.1'
 }

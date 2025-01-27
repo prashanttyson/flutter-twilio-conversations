@@ -1,1 +1,2 @@
+include ':twilio_conversations'
 rootProject.name = 'twilio_conversations'
