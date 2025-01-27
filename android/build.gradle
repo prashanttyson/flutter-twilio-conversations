@@ -1,5 +1,4 @@
-group 'twilio.flutter.twilio_conversations'
-version '1.0-SNAPSHOT'
+
 
 buildscript {
     ext.kotlin_version = '1.8.21'
@@ -24,6 +23,8 @@ plugins {
     id "com.android.library"
     id "kotlin-android"
 }
+group 'twilio.flutter.twilio_conversations'
+version '1.0-SNAPSHOT'
 
 
 android {
