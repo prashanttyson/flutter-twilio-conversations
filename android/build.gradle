@@ -20,11 +20,6 @@ rootProject.allprojects {
     }
 }
 
-plugins {
-    id "com.android.library"
-    id "kotlin-android"
-}
-
 android {
     namespace = "twilio.flutter.twilio_conversations" // Ensure this matches your package structure
     compileSdk = 34
