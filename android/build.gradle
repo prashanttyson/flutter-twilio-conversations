@@ -1,68 +1,51 @@
-group 'twilio.flutter.twilio_conversations'
-version '1.0-SNAPSHOT'
-
-buildscript {
-    ext.kotlin_version = '1.8.21'
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
+plugins {
+    id "com.android.library" // Android library plugin
+    id "kotlin-android"      // Kotlin Android plugin
 }
 
-rootProject.allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
+group = 'twilio.flutter.twilio_conversations'
+version = '1.0-SNAPSHOT'
 
 android {
     namespace = "twilio.flutter.twilio_conversations" // Ensure this matches your package structure
     compileSdk = 34
     ndkVersion = "23.1.7779620"
 
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
     defaultConfig {
         minSdk = 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-  
     }
-   lint {
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    lint {
         abortOnError = false // Prevent build failure on lint errors
         disable += ['InvalidPackage'] // Suppress 'InvalidPackage' warnings
     }
 
     kotlinOptions {
-       jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
-     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        jvmTarget = "1.8"
     }
 
-}
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-     // Kotlin reflection library
-    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version" // Match kotlin-stdlib version
-
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.21"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.8.21"
     implementation 'com.android.support:multidex:2.0.1'
     implementation 'com.twilio:conversations-android:6.1.1'
+}
+
+repositories {
+    google()
+    mavenCentral()
 }
