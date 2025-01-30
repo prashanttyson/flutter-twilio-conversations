@@ -88,6 +88,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - twilio_conversations (from `.symlinks/plugins/twilio_conversations/ios`)
+  - TwilioConversationsClient (~> 4.0.2)
 
 SPEC REPOS:
   trunk:
@@ -139,6 +140,6 @@ SPEC CHECKSUMS:
   TwilioStateMachine: 83d99bcb38d6133dd4f01f87464bd297f9f6c41b
   TwilioTwilsockLib: 2ac549121dddaafdd24e36f3a44b2b14eff7f540
 
-PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
+PODFILE CHECKSUM: edbd4db94145a7475387355a6de3683cb2f74a57
 
 COCOAPODS: 1.16.2
